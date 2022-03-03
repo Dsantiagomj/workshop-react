@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useReducer } from "react";
-import Formulario from "../components/formulario";
-import ListaTareas from "../components/listaTareas";
-import tareas from "../utils/tareas";
+import React, { useState, useEffect, useReducer } from 'react';
+import Formulario from '../components/formulario';
+import ListaTareas from '../components/listaTareas';
+import tareas from '../utils/tareas';
 
 const ACTIONS = {
-  CARGAR_TAREAS: "upload-todos",
-  CREAR_TAREA: "create-todo",
-  TOGGLE_TAREA: "toggle-tarea",
+  CARGAR_TAREAS: 'upload-todos',
+  CREAR_TAREA: 'create-todo',
+  TOGGLE_TAREA: 'toggle-tarea',
+  EDITAR_TAREA: 'editar-tarea',
+  ELIMINAR_TAREA: 'eliminar-tarea',
 };
 
 function reducer(state, action) {
@@ -17,6 +19,10 @@ function reducer(state, action) {
       return [...state, crearTodo(action.payload.tarea)];
     case ACTIONS.TOGGLE_TAREA:
       return toggleTodo(state, action.payload.id);
+    case ACTIONS.EDITAR_TAREA:
+      return editarTodo(state, action.payload.nuevaTarea);
+    case ACTIONS.ELIMINAR_TAREA:
+      return eliminarTodo(state, action.payload.id);
     default:
       return state;
   }
@@ -31,11 +37,27 @@ function crearTodo(tarea) {
 }
 
 function toggleTodo(state, id) {
-  return state.map((tarea) => {
-    return tarea.id === id
-      ? { ...tarea, completado: !tarea.completado }
-      : tarea;
-  });
+  return state.map((tarea) =>
+    tarea.id === id ? { ...tarea, completado: !tarea.completado } : tarea
+  );
+}
+
+function editarTodo(state, nuevaTarea) {
+  return state.map((tarea) =>
+    tarea.id === nuevaTarea.id
+      ? {
+          id: nuevaTarea.id,
+          titulo: nuevaTarea.titulo,
+          completado: nuevaTarea.completado,
+        }
+      : tarea
+  );
+}
+
+function eliminarTodo(state, id) {
+  return state
+    .map((tarea) => (tarea.id === id ? null : tarea))
+    .filter((tarea) => tarea != null);
 }
 
 export default function Principal() {
@@ -66,6 +88,8 @@ export default function Principal() {
 
   // funcion para editar una tarea
   const handleEditar = (nuevaTarea) => {
+    dispatch({ type: ACTIONS.EDITAR_TAREA, payload: { nuevaTarea } });
+    setEditable(null);
     // const nuevaLista = listaTareas.map((tarea) =>
     //   tarea.id === nuevaTarea.id
     //     ? {
@@ -81,6 +105,7 @@ export default function Principal() {
 
   // Eliminar una tarea
   const handleEliminar = (id) => {
+    dispatch({ type: ACTIONS.ELIMINAR_TAREA, payload: { id } });
     // const nuevaLista = listaTareas
     //   .map((tarea) => (tarea.id === id ? null : tarea))
     //   .filter((tarea) => tarea != null);
