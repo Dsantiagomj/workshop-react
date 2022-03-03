@@ -62,7 +62,6 @@ function eliminarTodo(state, id) {
 
 export default function Principal() {
   // Estados del componente
-  // const [listaTareas, setListaTareas] = useState([]);
   const [state, dispatch] = useReducer(reducer, []);
   const [editable, setEditable] = useState(null);
 
@@ -90,26 +89,11 @@ export default function Principal() {
   const handleEditar = (nuevaTarea) => {
     dispatch({ type: ACTIONS.EDITAR_TAREA, payload: { nuevaTarea } });
     setEditable(null);
-    // const nuevaLista = listaTareas.map((tarea) =>
-    //   tarea.id === nuevaTarea.id
-    //     ? {
-    //         id: nuevaTarea.id,
-    //         titulo: nuevaTarea.titulo,
-    //         completado: nuevaTarea.completado,
-    //       }
-    //     : tarea
-    // );
-    // setListaTareas(nuevaLista);
-    // setEditable(null);
   };
 
   // Eliminar una tarea
   const handleEliminar = (id) => {
     dispatch({ type: ACTIONS.ELIMINAR_TAREA, payload: { id } });
-    // const nuevaLista = listaTareas
-    //   .map((tarea) => (tarea.id === id ? null : tarea))
-    //   .filter((tarea) => tarea != null);
-    // setListaTareas(nuevaLista);
   };
 
   // Renderizar el componente
